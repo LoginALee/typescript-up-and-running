@@ -24,3 +24,126 @@ class Alexa {
  new Alexa().sayTime("10:15") // Cool
  new Alexa().sayTIme() // Error, Expected 1 arguments, but got 0
 ```
+
+### Class Properties
+Properties are checked the same way as interfaces, for example:
+
+```javascript
+class Dog {
+  name: string;
+  
+  constructor(name: string){
+    this.name = name;
+    
+    this.bankAccount = name // Error: Property
+    // 'bankAccount' does not exist on type Dog
+   }
+   
+ }
+```
+And, when it comes to Function properties, Typescript checks for both kinds of declaring a member on a class :
+  - Method (Using the same function per Class)
+  - Property (Re-creating the same function per instance)
+  
+And threats them as a regular Javascript function, checking his params and return types:
+
+```javascript
+class Netflix {
+  // Method
+  playVideo(title: string) {
+  }
+  
+  // Property
+  closeVideo: (title: string) => {}
+}
+
+new Netflix().playVideo === new Netflix().playVideo // true
+new Netflix().closeVideo === new Netflix().closeVideo // false
+
+```
+
+Two more important notes about properties: we can have optional properties (similar to interfaces) and read-only properties:
+
+```javascript
+class Cat {
+  name?: string; // Optional property
+  readonly birthDate: Date; // Read-only property
+}
+
+```
+
+### Classes as Types
+One interesting feature is that we can use our classes as types, similar to when we have an Object and an Interface: 
+
+```javascript
+class Artist {
+  sing() {
+    console.log("I'm Singing!!")
+  }
+}
+
+let alejandroFernandez: Artist;
+
+alejandroFernandez = new Artist(); // Ok
+alejandroFernandez = 'some text...' // Error: Type 'string' is not assignable
+// to type 'Artist'
+
+```
+
+### Classes and Interfaces
+We can extend our classes using one or many interfaces using the _impplements_ keyword:
+
+```javascript
+interface Game {
+  type: string;
+}
+
+class BoardGame implements Game {
+  type: string;
+  
+  constructor(type: string){
+    this.type = type
+  }
+}
+
+```
+When we extend our classes, TS will check that our subclass properties or methods matches his base class types, for example: 
+
+```javascript
+interface Game {
+  type: string;
+}
+
+class BoardGame implements Game {
+  type: number;
+  // Type 'number' is not assignable to type 'string'
+  
+  constructor(type: number){
+    this.type = type
+  }
+}
+```
+
+### Abstract classes
+In certain situations, we may want to enforce that our classes have certain properties, but let the subclasses to implement their own signatures.
+We can do this with the keyword _abstract_ :
+
+```javascript
+abstract class Programmer {
+  abstract drinkFavoriteDrink();
+
+}
+
+class JavascriptProgrammer extends Programmer {
+  drinkFavoriteDrink() {
+    console.log("I'm drinking Beer!")
+  }
+}
+
+class RubyProgrammer extends Programmer {
+  drinkFavoriteDrink() {
+    console.log("I'm drinking Cherry soda!")
+  }
+}
+```
+
